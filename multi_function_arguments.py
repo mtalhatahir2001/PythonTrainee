@@ -1,8 +1,8 @@
 # edit the functions prototype and implementation
-def foo(a:int, b:int, c:int, *extras:list[int]):
+def foo(a:int, b:int, c:int, *extras:list[int]) -> int:
     return len(extras)
 
-def bar(a, b, c, **extras):
+def bar(a:int, b:int, c:int, **extras:dict) -> bool:
     if (extras.get("magicnumber") != None 
             and extras.get("magicnumber") == 7):
         return True
