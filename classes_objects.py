@@ -11,7 +11,7 @@ class Vehicle:
         self.value = value
         self.kind = kind
         
-    def description(self) -> None:
+    def description(self) -> str:
         desc_str = "%s is a %s %s worth $%.2f." % (self.name, self.color, self.kind, self.value)
         return desc_str
 # your code goes here
