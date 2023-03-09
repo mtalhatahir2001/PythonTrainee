@@ -1,5 +1,7 @@
-def type_check(correct_type):
-    def decorator(old_function):
+from typing import Callable
+
+def type_check(correct_type: type) -> Callable:
+    def decorator(old_function: type) -> Callable:
         def new_function(args):
             if isinstance(args, correct_type):
                 return old_function(args)
