@@ -1,5 +1,6 @@
 # fill in this function
-def fib():
+from typing import Generator
+def fib() -> Generator[int, None, None]:
     a, b = 1, 1
     yield a
     yield b
