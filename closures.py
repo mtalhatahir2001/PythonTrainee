@@ -1,5 +1,7 @@
 # your code goes here
-def multiplier_of(n:int) -> object:
+from typing import Callable
+
+def multiplier_of(n:int) -> Callable:
      def multiplier(x:int)-> int:
           print(x * n)
      return multiplier
