@@ -20,3 +20,4 @@ if type(fib()) == types.GeneratorType:
         counter += 1
         if counter == 10:
             break
+        
