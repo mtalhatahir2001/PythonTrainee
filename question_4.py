@@ -4,6 +4,8 @@ class Restaurant:
     def __init__(self) -> None:
         self.__menu = dict()
         self.__reservations = list()
+        self.__orders = list()
+        self.__GST_RATE = 18
     
     def add_item_to_menu(self, menu_item: dict) -> None:
         if self.__menu.get(menu_item.get("id")) != None:
@@ -25,7 +27,7 @@ class Restaurant:
                 f" ---- {self.__menu[i]['price']}\n"
         return menu_string
     
-    def book_table(self, reservation: dict)->None:
+    def book_table(self, reservation: dict) -> None:
         #Will raise an exception if same table
         #is booked at the same time slot.
         for i in self.__reservations:
@@ -35,7 +37,7 @@ class Restaurant:
         self.__reservations.append(reservation)
     
     @property
-    def reservations(self):
+    def reservations(self) -> str:
         """
         This is a getter for attribute __reservations
         This function also serves the purpose of display reservation function 
@@ -46,6 +48,40 @@ class Restaurant:
             reservation_string += f"{i['table_id']}\t\t" \
                 f"{i['reservation_time']}\t\t{i['customer_id']}\n"
         return reservation_string
+    
+    def customer_order(self, order: dict) -> None:
+        #Will place customers order only if item cutomer 
+        #ordered is present in menu.
+        if not order.get('item_id') in self.__menu:
+            raise Exception("[ERROR] Item not in menu")
+        else:
+            self.__orders.append(order)
+
+    def customer_bill(self, customer_id: int) -> str:
+        total_bill = 0.0
+        bill_string = f"*-----BILL-----*\n"
+        for i in self.__orders:
+            if i.get("customer_id") == customer_id:
+                bill_string += self.__create_item_string(i.get("item_id"))
+                total_bill += self.__menu.get(i.get("item_id")).get("price")
+        bill_with_gst = self.__calculate_gst(total_bill)
+        bill_string += f"Total bill ---- {total_bill}\n" \
+            f"GST Rate ---- {self.__GST_RATE}%\n" \
+            f"TOTAL PAYABLE BILL ---- {bill_with_gst}\n"
+        return bill_string
+    
+    def __create_item_string(self, item_id: dict) -> str:
+        """
+        This helper function return the item in printable format.
+        """
+        item = self.__menu.get(item_id)
+        item_string = f"{item_id}. {item['name']}" \
+                f" ---- {item['price']}\n"
+        return item_string
+
+    def __calculate_gst(self, total_bill: float) -> float:
+        return total_bill + ((total_bill * self.__GST_RATE) / 100.0)
+
 
 if __name__ == "__main__":
     try:
@@ -54,6 +90,9 @@ if __name__ == "__main__":
         rest.add_item_to_menu({"id":2, "name":"Lemonade", "price":40})
         rest.book_table({"table_id":2, "customer_id":3, "reservation_time":date.today()})
         rest.book_table({"table_id":1, "customer_id":3, "reservation_time":date.today()})
-        print(rest.reservations)
+        rest.customer_order({"customer_id":1, "item_id":2})
+        rest.customer_order({"customer_id":1, "item_id":1})
+        print(rest.customer_bill(1))
+        #print(rest.reservations)
     except Exception  as e:
         print(e)
