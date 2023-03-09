@@ -1,5 +1,6 @@
 from datetime import date
 
+
 class Restaurant:
     def __init__(self) -> None:
         self.__menu = dict()
