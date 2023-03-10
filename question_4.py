@@ -9,6 +9,10 @@ class Restaurant:
         self.__GST_RATE = 18
 
     def add_item_to_menu(self, menu_item: dict) -> None:
+        """
+        This module add new items to menu. menu_item is a dict
+        that must have id, name and price attributes.
+        """
         if self.__menu.get(menu_item.get("id")) != None:
             raise Exception("[ERROR] Item already in menu.")
         else:
@@ -30,6 +34,10 @@ class Restaurant:
         return menu_string
 
     def book_table(self, reservation: dict) -> None:
+        """
+        reservation must have the following attributes table_id: int, customer_id: int and
+        reservation_time: datetime
+        """
         # Will raise an exception if same table
         # is booked at the same time slot.
         for i in self.__reservations:
@@ -54,7 +62,11 @@ class Restaurant:
             )
         return reservation_string
 
-    def customer_order(self, order: dict) -> None:
+    def customer_order(self, order: dict[int, int]) -> None:
+        """
+        This module places the order of a customer.
+        order dict must have customer_id: int and item_id: int.
+        """
         # Will place customers order only if item cutomer
         # ordered is present in menu.
         if not order.get("item_id") in self.__menu:
@@ -63,6 +75,9 @@ class Restaurant:
             self.__orders.append(order)
 
     def customer_bill(self, customer_id: int) -> str:
+        """
+        Calculate and returns the total bill as printable string.
+        """
         total_bill = 0.0
         bill_string = f"*-----BILL-----*\n"
         for i in self.__orders:
@@ -77,7 +92,7 @@ class Restaurant:
         )
         return bill_string
 
-    def __create_item_string(self, item_id: dict) -> str:
+    def __create_item_string(self, item_id: int) -> str:
         """
         This helper function return the item in printable format.
         """
@@ -94,15 +109,20 @@ if __name__ == "__main__":
         rest = Restaurant()
         rest.add_item_to_menu({"id": 1, "name": "Coffee", "price": 60})
         rest.add_item_to_menu({"id": 2, "name": "Lemonade", "price": 40})
+        # will print the menu.
+        print(rest.menu)
+        # making a reservation.
         rest.book_table(
             {"table_id": 2, "customer_id": 3, "reservation_time": date.today()}
         )
         rest.book_table(
             {"table_id": 1, "customer_id": 3, "reservation_time": date.today()}
         )
+        # same customer placing order 2 times.
         rest.customer_order({"customer_id": 1, "item_id": 2})
         rest.customer_order({"customer_id": 1, "item_id": 1})
         print(rest.customer_bill(1))
-        # print(rest.reservations)
+        # will print the all the reservations.
+        print(rest.reservations)
     except Exception as e:
         print(e)
