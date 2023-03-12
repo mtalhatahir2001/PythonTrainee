@@ -8,7 +8,7 @@ class WeatherForecaster:
         self.__BASE_URL = "http://api.weatherapi.com/v1"
         self.__API_KEY = "e38e088af196452e88f145935230903"
         self.__CURRENT_WEATHER_ROUTE = "/current.json"
-        self.__accepted_params = ["hour", "city", "postal_code"]
+        self.__accepted_params = ["hour", "city", "postal_code", "days"]
         self.__priority_of_q = ["postal_code", "city"]
         self.__result_params = [
             "feelslike_f",
@@ -18,6 +18,7 @@ class WeatherForecaster:
             "cloud",
             "vis_km",
             "temp_f",
+            "dewpoint_f",
         ]
         # Since weather api is only returning 1,2,3...
         # So created this hashtable for maping.
@@ -30,11 +31,11 @@ class WeatherForecaster:
             6: "Hazardous",
         }
 
-    def __create_url(self, params: dict[str, Any]) -> str:
+    def __create_url(self, route_url: str, params: dict[str, Any]) -> str:
         """
         Takes all the params and returns the url that can directly be fetched.
         """
-        url = f"{self.__BASE_URL}{self.__CURRENT_WEATHER_ROUTE}?key={self.__API_KEY}"
+        url = f"{self.__BASE_URL}{route_url}?key={self.__API_KEY}"
         q = self.__get_value_of_q(params)
         if q != None:
             url += f"&q={q}"
@@ -99,14 +100,14 @@ class WeatherForecaster:
                 filtered_params[i] = extra_params[i]
         filtered_params["aqi"] = "yes" if air_quality else "no"
 
-        url = self.__create_url(filtered_params)
+        url = self.__create_url(self.__CURRENT_WEATHER_ROUTE, filtered_params)
         return self.__fetch(url)
 
 
-print(
-    WeatherForecaster().get_current_weather(
-        True, hour=4, city="lahore", postal_code="SW1"
-    )
-    # this postal_code is of london even though city is lahore it
-    # will return result of london since postal_code has higher priority.
-)
+# print(
+#     WeatherForecaster().get_current_weather(
+#         True, hour=4, city="lahore", postal_code="SW1"
+#     )
+#     # this postal_code is of london even though city is lahore it
+#     # will return result of london since postal_code has higher priority.
+# )
