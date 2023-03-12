@@ -1,4 +1,5 @@
 from datetime import date
+from typing import Any
 
 
 class Restaurant:
@@ -8,7 +9,7 @@ class Restaurant:
         self.__orders = list()
         self.__GST_RATE = 18
 
-    def add_item_to_menu(self, menu_item: dict) -> None:
+    def add_item_to_menu(self, menu_item: dict[str, Any]) -> None:
         """
         This module add new items to menu. menu_item is a dict
         that must have id, name and price attributes.
@@ -33,7 +34,7 @@ class Restaurant:
             )
         return menu_string
 
-    def book_table(self, reservation: dict) -> None:
+    def book_table(self, reservation: dict[str, Any]) -> None:
         """
         reservation must have the following attributes table_id: int, customer_id: int and
         reservation_time: datetime
