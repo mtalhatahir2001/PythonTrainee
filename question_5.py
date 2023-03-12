@@ -1,12 +1,66 @@
+from typing import Any
+
 import requests
 
 
-def get_current_weather() -> str:
-    print(
-        requests.get(
-            "http://api.weatherapi.com/v1/current.json?key=e38e088af196452e88f145935230903&q=lahore"
-        ).json()
-    )
+class WeatherForecaster:
+    def __init__(self):
+        self.__BASE_URL = "http://api.weatherapi.com/v1"
+        self.__API_KEY = "e38e088af196452e88f145935230903"
+        self.__CURRENT_WEATHER_ROUTE = "/current.json"
+        self.__accepted_params = ["hour", "city", "postal_code"]
+        self.__priority = ["postal_code", "city", "country"]
+
+    def __create_url(self, params: dict[str, Any]) -> str:
+        url = f"{self.__BASE_URL}{self.__CURRENT_WEATHER_ROUTE}?key={self.__API_KEY}"
+        q = self.__get_value_of_q(params)
+        if q != None:
+            url += f"&q={q}"
+        for i in params:
+            if not i in self.__priority:
+                url += f"&{i}={params[i]}"
+        return url
+
+    def __get_value_of_q(self, params: dict[str, Any]) -> Any:
+        """
+        Since q can have more then one value, this function resolves parameters into q
+        based on priority. postal_code > city > country
+        """
+        for i in self.__priority:
+            if params.get(i) != None:
+                return params.get(i)
+        return None
+
+    def __fetch(self, url: str) -> dict:
+        return requests.get(url).json()
+
+    def get_current_weather(
+        self, air_quality: bool = False, **extra_params: dict[str, Any]
+    ) -> dict:
+        """
+        Fetch the weather api based on the parameters provided.\n
+        Required parameters
+        -------------------
+        air_quality : bool
+            Default value is False\n
+        Optional parameters
+        -------------------
+        hour : int
+            24 hour format
+        city : str
+        postal_code : int
+            If both city and postal_code are provided this fucntion will priortize search
+        based on postal_code and will ignore all other params other then these.
+        """
+        # These line removes all the parameters that are not required by the API.
+        filtered_params = dict()
+        for i in extra_params:
+            if i in self.__accepted_params:
+                filtered_params[i] = extra_params[i]
+        filtered_params["aqi"] = "yes" if air_quality else "no"
+
+        url = self.__create_url(filtered_params)
+        print(self.__fetch(url))
 
 
-get_current_weather()
+WeatherForecaster().get_current_weather(True, hour=4, city="lahore", postal_code="SW1")
