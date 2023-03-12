@@ -57,18 +57,22 @@ class WeatherForecaster:
         """
         This module/function fetch the api also filter the result based on self.__result_params
         """
-        response = requests.get(url).json()
-        result = dict()
-        result["date_time"] = response.get("location").get("localtime")
-        result["condition"] = response.get("current").get("condition").get("text")
-        for i in response.get("current"):
-            if i in self.__result_params:
-                result[i] = response.get("current").get(i)
-        air_quality_index = (
-            response.get("current").get("air_quality").get("us-epa-index")
-        )
-        result["air_quality"] = self.__air_quality_types.get(air_quality_index)
-        return result
+        try:
+            response = requests.get(url).json()
+            result = dict()
+            result["date_time"] = response.get("location").get("localtime")
+            result["condition"] = response.get("current").get("condition").get("text")
+            for i in response.get("current"):
+                if i in self.__result_params:
+                    result[i] = response.get("current").get(i)
+            air_quality_index = (
+                response.get("current").get("air_quality").get("us-epa-index")
+            )
+            result["air_quality"] = self.__air_quality_types.get(air_quality_index)
+            return result
+        except Exception as e:
+            print(e)
+            return dict()
 
     def get_current_weather(
         self, air_quality: bool = False, **extra_params: dict[str, Any]
