@@ -43,6 +43,23 @@ class Forecaster(WeatherForecaster):
     def get_forecast_data(
         self, air_quality: bool = False, **extra_params: dict[str, Any]
     ) -> dict:
+        """
+        Fetch the weather api based on the parameters provided.\n
+        Required parameters
+        -------------------
+        air_quality : bool
+            Default value is False\n
+        Optional parameters
+        -------------------
+        hour : int
+            24 hour format
+        days: int
+            number of days to strict your result.
+        city : str
+        postal_code : int
+            If both city and postal_code are provided this fucntion will priortize search
+        based on postal_code and will ignore all other params other then these.
+        """
         filtered_params = dict()
         for i in extra_params:
             if i in self._WeatherForecaster__accepted_params:
