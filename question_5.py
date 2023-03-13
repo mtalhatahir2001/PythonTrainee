@@ -57,6 +57,7 @@ class WeatherForecaster:
         """
         This module/function fetch the api also filter the result based on self.__result_params
         """
+        result = dict()
         try:
             response = requests.get(url).json()
             result = dict()
@@ -69,10 +70,9 @@ class WeatherForecaster:
                 response.get("current").get("air_quality").get("us-epa-index")
             )
             result["air_quality"] = self.__air_quality_types.get(air_quality_index)
-            return result
         except Exception as e:
             print(e)
-            return dict()
+        return result
 
     def get_current_weather(
         self, air_quality: bool = False, **extra_params: dict[str, Any]
