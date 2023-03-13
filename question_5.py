@@ -102,12 +102,3 @@ class WeatherForecaster:
 
         url = self.__create_url(self.__CURRENT_WEATHER_ROUTE, filtered_params)
         return self.__fetch(url)
-
-
-# print(
-#     WeatherForecaster().get_current_weather(
-#         True, hour=4, city="lahore", postal_code="SW1"
-#     )
-#     # this postal_code is of london even though city is lahore it
-#     # will return result of london since postal_code has higher priority.
-# )

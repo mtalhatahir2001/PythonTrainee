@@ -71,4 +71,5 @@ class Forecaster(WeatherForecaster):
         return self.__fetch(url)
 
 
-print(Forecaster().get_forecast_data(True, hour=4, city="lahore", days=3))
+if __name__ == "__main__":
+    print(Forecaster().get_forecast_data(True, hour=4, city="lahore", days=3))
