@@ -1,6 +1,9 @@
+import logging
 from typing import Any
 
 import requests
+
+logging.basicConfig(level=logging.DEBUG, filename="logs.txt")
 
 
 class WeatherForecaster:
@@ -72,7 +75,7 @@ class WeatherForecaster:
             result["air_quality"] = self.__air_quality_types.get(air_quality_index)
             return result
         except Exception as e:
-            print(e)
+            logging.exception("Exception")
             return dict()
 
     def get_current_weather(

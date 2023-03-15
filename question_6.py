@@ -1,7 +1,10 @@
+import logging
 from typing import Any
 
 import requests
 from question_5 import WeatherForecaster
+
+logging.basicConfig(level=logging.DEBUG, filename="logs.txt")
 
 
 class Forecaster(WeatherForecaster):
@@ -37,7 +40,7 @@ class Forecaster(WeatherForecaster):
                 result["forecastday"].append(dayResult)
             return result
         except Exception as e:
-            print(e)
+            logging.exception("Exception")
             return dict()
 
     def get_forecast_data(
@@ -69,7 +72,3 @@ class Forecaster(WeatherForecaster):
             self.__CURRENT_WEATHER_ROUTE, filtered_params
         )
         return self.__fetch(url)
-
-
-if __name__ == "__main__":
-    print(Forecaster().get_forecast_data(True, hour=4, city="lahore", days=3))

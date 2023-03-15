@@ -6,6 +6,8 @@ name = "pypi"
 [packages]
 camelcase = "*"
 requests = "*"
+sqlalchemy = "*"
+psycopg2 = "*"
 
 [dev-packages]
 
