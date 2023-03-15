@@ -5,6 +5,8 @@ from question_6 import Forecaster
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 
+logging.basicConfig(level=logging.DEBUG, filename="logs.txt")
+
 if __name__ == "__main__":
     try:
         engine = create_engine(
