@@ -20,9 +20,13 @@ class Forecaster(WeatherForecaster):
             response = requests.get(url).json()
             result = dict()
             result["date_time"] = response.get("location").get("localtime")
+            result["city"] = response.get("location").get("name")
+            result["latitude"] = response.get("location").get("lat")
+            result["longitude"] = response.get("location").get("lon")
             result["forecastday"] = list()
             for i in response.get("forecast").get("forecastday"):
                 dayResult = dict()
+                dayResult["date"] = i.get("date")
                 dayResult["daily_chance_of_rain"] = i.get("day").get(
                     "daily_chance_of_rain"
                 )

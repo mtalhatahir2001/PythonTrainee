@@ -1,36 +1,42 @@
 import logging
 
-from models import Base
+from database_handler import db_handler
+from models import Condition, Day, Location, Temprature, Wind
 from question_6 import Forecaster
-from sqlalchemy import create_engine
-from sqlalchemy.orm import Session
 
 logging.basicConfig(level=logging.DEBUG, filename="logs.txt")
 
+
+def dump_forecasted_data(city: str, interval: int = 0) -> None:
+    result = Forecaster().get_forecast_data(True, hour=4, city=city, days=interval)
+    for i in result.get("forecastday"):
+        location = Location(
+            name=result.get("city"),
+            latitude=result.get("latitude"),
+            longitude=result.get("longitude"),
+        )
+        day = Day(is_current=False, day_date=i.get("date"))
+        wind = Wind(
+            vis_km=i.get("vis_km"),
+            gust_mph=i.get("gust_mph"),
+            humidity=i.get("humidity"),
+        )
+        temp = Temprature(temp_f=i.get("temp_f"), feelslike_f=i.get("feelslike_f"))
+        condition = Condition(
+            daily_chance_of_rain=i.get("daily_chance_of_rain"),
+            daily_chance_of_snow=i.get("daily_chance_of_snow"),
+            condition=i.get("condition"),
+            pressure_in=i.get("pressure_in"),
+            cloud=i.get("cloud"),
+            dewpoint_f=i.get("dewpoint_f"),
+            air_quality=i.get("air_quality"),
+        )
+        handle = db_handler()
+        handle.insertForecastedData(day, location, wind, temp, condition)
+
+
 if __name__ == "__main__":
     try:
-        engine = create_engine(
-            "postgresql://postgres:1234@localhost:5432/test_db_pg", echo=False
-        )
-        Base.metadata.create_all(engine)
-        # with Session(engine) as session:
-        #     result = Forecaster().get_forecast_data(True, hour=4, city="lahore", days=3)
-        #     for i in result.get("forecastday"):
-        #         day = ForecastDay(
-        #             daily_chance_of_rain=i.get("daily_chance_of_rain"),
-        #             daily_chance_of_snow=i.get("daily_chance_of_snow"),
-        #             condition=i.get("condition"),
-        #             temp_f=i.get("temp_f"),
-        #             pressure_in=i.get("pressure_in"),
-        #             humidity=i.get("humidity"),
-        #             cloud=i.get("cloud"),
-        #             feelslike_f=i.get("feelslike_f"),
-        #             dewpoint_f=i.get("dewpoint_f"),
-        #             vis_km=i.get("vis_km"),
-        #             gust_mph=i.get("gust_mph"),
-        #             air_quality=i.get("air_quality"),
-        #         )
-        #         session.add(day)
-        #     session.commit()
+        dump_forecasted_data(city="Islamabad", interval=4)
     except Exception as e:
         logging.exception("Exception occured")

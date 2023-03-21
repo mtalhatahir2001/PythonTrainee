@@ -14,10 +14,10 @@ class Day(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     day_date: Mapped[datetime] = mapped_column(DateTime())
     is_current: Mapped[bool] = mapped_column(Boolean())
-    temprature: Mapped["Temprature"] = relationship(back_populates="parent")
-    wind: Mapped["Wind"] = relationship(back_populates="parent")
-    location: Mapped["Location"] = relationship(back_populates="parent")
-    condition: Mapped["Condition"] = relationship(back_populates="parent")
+    temprature_child: Mapped["Temprature"] = relationship(back_populates="day")
+    wind_child: Mapped["Wind"] = relationship(back_populates="day")
+    location_child: Mapped["Location"] = relationship(back_populates="day")
+    condition_child: Mapped["Condition"] = relationship(back_populates="day")
 
 
 class Temprature(Base):
@@ -25,7 +25,7 @@ class Temprature(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     day_id: Mapped[int] = mapped_column(ForeignKey("Day.id"))
-    day: Mapped[Day] = relationship(back_populates="child")
+    day: Mapped[Day] = relationship(back_populates="temprature_child")
     temp_f: Mapped[float] = mapped_column(Float())
     feelslike_f: Mapped[float] = mapped_column(Float())
 
@@ -34,7 +34,7 @@ class Wind(Base):
     __tablename__ = "Wind"
     id: Mapped[int] = mapped_column(primary_key=True)
     day_id: Mapped[int] = mapped_column(ForeignKey("Day.id"))
-    day: Mapped[Day] = relationship(back_populates="child")
+    day: Mapped[Day] = relationship(back_populates="wind_child")
     vis_km: Mapped[float] = mapped_column(Float())
     gust_mph: Mapped[float] = mapped_column(Float())
     humidity: Mapped[int] = mapped_column(Integer())
@@ -45,7 +45,7 @@ class Location(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     day_id: Mapped[int] = mapped_column(ForeignKey("Day.id"))
-    day: Mapped[Day] = relationship(back_populates="child")
+    day: Mapped[Day] = relationship(back_populates="location_child")
     longitude: Mapped[float] = mapped_column(Float())
     latitude: Mapped[float] = mapped_column(Float())
     name: Mapped[str] = mapped_column(String(32))
@@ -56,7 +56,7 @@ class Condition(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     day_id: Mapped[int] = mapped_column(ForeignKey("Day.id"))
-    day: Mapped[Day] = relationship(back_populates="child")
+    day: Mapped[Day] = relationship(back_populates="condition_child")
     daily_chance_of_rain: Mapped[int] = mapped_column(Integer())
     daily_chance_of_snow: Mapped[int] = mapped_column(Integer())
     condition: Mapped[str] = mapped_column(String(50))
