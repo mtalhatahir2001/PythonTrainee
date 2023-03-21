@@ -14,7 +14,7 @@ class db_handler:
         )
         Base.metadata.create_all(self.__engine)
 
-    def insertForecastedData(
+    def insertData(
         self,
         day: Day,
         location: Location,
@@ -33,7 +33,9 @@ class db_handler:
                     .join(Location)
                     .filter(
                         and_(
-                            Day.day_date == day.day_date, Location.name == location.name
+                            Day.day_date == day.day_date,
+                            Location.name == location.name,
+                            Day.is_current == day.is_current,
                         )
                     )
                     .first()

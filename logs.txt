@@ -1,8 +1,8 @@
 DEBUG:urllib3.connectionpool:Starting new HTTP connection (1): api.weatherapi.com:80
-DEBUG:urllib3.connectionpool:http://api.weatherapi.com:80 "GET /v1/forecast.json?key=e38e088af196452e88f145935230903&q=Islamabad&hour=4&days=4&aqi=yes HTTP/1.1" 200 None
+DEBUG:urllib3.connectionpool:http://api.weatherapi.com:80 "GET /v1/current.json?key=e38e088af196452e88f145935230903&q=lahore&aqi=yes HTTP/1.1" 200 None
 INFO:root:Record already present. Nothing Changed
-INFO:root:Record already present. Nothing Changed
-INFO:root:Record already present. Nothing Changed
+DEBUG:urllib3.connectionpool:Starting new HTTP connection (1): api.weatherapi.com:80
+DEBUG:urllib3.connectionpool:http://api.weatherapi.com:80 "GET /v1/current.json?key=e38e088af196452e88f145935230903&q=lahore&aqi=yes HTTP/1.1" 200 None
 INFO:root:Record already present. Nothing Changed
 DEBUG:urllib3.connectionpool:Starting new HTTP connection (1): api.weatherapi.com:80
 DEBUG:urllib3.connectionpool:http://api.weatherapi.com:80 "GET /v1/forecast.json?key=e38e088af196452e88f145935230903&q=Islamabad&hour=4&days=4&aqi=yes HTTP/1.1" 200 None
@@ -15,7 +15,17 @@ INFO:root:Forecasted data inserted!
 INFO:root:Inserting forcasted data into DB
 INFO:root:Forecasted data inserted!
 DEBUG:urllib3.connectionpool:Starting new HTTP connection (1): api.weatherapi.com:80
-DEBUG:urllib3.connectionpool:http://api.weatherapi.com:80 "GET /v1/forecast.json?key=e38e088af196452e88f145935230903&q=Islamabad&hour=4&days=4&aqi=yes HTTP/1.1" 200 None
+DEBUG:urllib3.connectionpool:http://api.weatherapi.com:80 "GET /v1/forecast.json?key=e38e088af196452e88f145935230903&q=Lahore&hour=4&days=4&aqi=yes HTTP/1.1" 200 None
+INFO:root:Inserting forcasted data into DB
+INFO:root:Forecasted data inserted!
+INFO:root:Inserting forcasted data into DB
+INFO:root:Forecasted data inserted!
+INFO:root:Inserting forcasted data into DB
+INFO:root:Forecasted data inserted!
+INFO:root:Inserting forcasted data into DB
+INFO:root:Forecasted data inserted!
+DEBUG:urllib3.connectionpool:Starting new HTTP connection (1): api.weatherapi.com:80
+DEBUG:urllib3.connectionpool:http://api.weatherapi.com:80 "GET /v1/forecast.json?key=e38e088af196452e88f145935230903&q=Lahore&hour=4&days=4&aqi=yes HTTP/1.1" 200 None
 INFO:root:Record already present. Nothing Changed
 INFO:root:Record already present. Nothing Changed
 INFO:root:Record already present. Nothing Changed

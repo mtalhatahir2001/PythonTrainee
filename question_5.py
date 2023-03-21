@@ -66,6 +66,9 @@ class WeatherForecaster:
             result = dict()
             result["date_time"] = response.get("location").get("localtime")
             result["condition"] = response.get("current").get("condition").get("text")
+            result["city"] = response.get("location").get("name")
+            result["latitude"] = response.get("location").get("lat")
+            result["longitude"] = response.get("location").get("lon")
             for i in response.get("current"):
                 if i in self.__result_params:
                     result[i] = response.get("current").get(i)
