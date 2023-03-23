@@ -63,4 +63,4 @@ class Condition(Base):
     pressure_in: Mapped[float] = mapped_column(Float())
     cloud: Mapped[int] = mapped_column(Integer())
     dewpoint_f: Mapped[float] = mapped_column(Float(), nullable=True)
-    air_quality: Mapped[str] = mapped_column(String())
+    air_quality: Mapped[str] = mapped_column(String(), nullable=True)

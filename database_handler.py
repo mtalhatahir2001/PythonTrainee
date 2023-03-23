@@ -1,7 +1,8 @@
 import logging
+from datetime import date
 
 from models import Base, Condition, Day, Location, Temprature, Wind
-from sqlalchemy import and_, create_engine, desc
+from sqlalchemy import and_, create_engine, desc, func
 from sqlalchemy.orm import Session
 
 logging.basicConfig(level=logging.DEBUG, filename="logs.txt")
@@ -58,3 +59,53 @@ class db_handler:
                     logging.info("Record already present. Nothing Changed")
         except Exception as e:
             logging.exception("Exception occured")
+
+    def get_forecasted_data(self, city: str) -> list[Day]:
+        """
+        This function takes in the city and returns the forecasted temprature
+        of all the available after the current day.
+        """
+        with Session(self.__engine) as session:
+            current_date = date.today()
+            days = (
+                session.query(Day)
+                .join(Location)
+                .join(Temprature)
+                .filter(
+                    and_(
+                        Day.day_date >= current_date,
+                        func.lower(Location.name) == city.lower(),
+                        Day.is_current == False,
+                    )
+                )
+                .all()
+            )
+            return days
+
+    def get_temperature(self, days: list[Day]) -> Temprature:
+        """
+        This function takes a list of days and return the max temprature among the list of
+        days
+        """
+        list_of_ids = list()
+        [list_of_ids.append(day.id) for day in days]
+        with Session(self.__engine) as session:
+            """
+            The below query is same as
+            select * from temprature where id == (select max(id) from temprature where id in (list_of_ids))
+            """
+            temp = (
+                session.query(Temprature)
+                .filter(
+                    Temprature.id
+                    == (
+                        session.query(func.max(Temprature.id))
+                        .filter(Temprature.day_id.in_(list_of_ids))
+                        .first()[
+                            0
+                        ]  # since sub query return a tuple so its 0th index has the highest value
+                    )
+                )
+                .first()
+            )
+        return temp

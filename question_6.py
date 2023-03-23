@@ -17,6 +17,7 @@ class Forecaster(WeatherForecaster):
         This module/function fetch the api also filter the result based on self.__result_params
         """
         try:
+            logging.info(f"fetching {url}")
             response = requests.get(url).json()
             result = dict()
             result["date_time"] = response.get("location").get("localtime")
