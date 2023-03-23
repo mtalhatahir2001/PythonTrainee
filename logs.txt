@@ -1,9 +1,0 @@
-INFO:root:fetching http://api.weatherapi.com/v1/forecast.json?key=e38e088af196452e88f145935230903&q=karachi&hour=4&days=6&aqi=yes
-DEBUG:urllib3.connectionpool:Starting new HTTP connection (1): api.weatherapi.com:80
-DEBUG:urllib3.connectionpool:http://api.weatherapi.com:80 "GET /v1/forecast.json?key=e38e088af196452e88f145935230903&q=karachi&hour=4&days=6&aqi=yes HTTP/1.1" 200 None
-INFO:root:Record already present. Nothing Changed
-INFO:root:Record already present. Nothing Changed
-INFO:root:Record already present. Nothing Changed
-INFO:root:Record already present. Nothing Changed
-INFO:root:Record already present. Nothing Changed
-INFO:root:Record already present. Nothing Changed

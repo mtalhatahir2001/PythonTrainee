@@ -109,3 +109,33 @@ class db_handler:
                 .first()
             )
         return temp
+
+    def get_second_humid_city(self):
+        with Session(self.__engine) as session:
+            current_date = date.today()
+            """
+            The below query groups the data based on city then find the avg humidty of each group 
+            and return the sorted list in reverse order.
+            sample output:
+            [   
+                (Decimal('69.3000000000000000'), 'Karachi'), 
+                (Decimal('61.8333333333333333'), 'Lahore'), 
+                (Decimal('60.1666666666666667'), 'Islamabad')
+            ]
+            """
+            days = (
+                session.query(func.avg(Wind.humidity), Location.name)
+                .select_from(Wind)
+                .join(Day)
+                .join(Location)
+                .filter(
+                    and_(
+                        Day.day_date >= current_date,
+                        Day.is_current == False,
+                    )
+                )
+                .group_by(Location.name)
+                .order_by(func.avg(Wind.humidity).desc())
+                .all()
+            )
+            return days

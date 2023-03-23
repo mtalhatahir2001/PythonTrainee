@@ -106,6 +106,8 @@ def get_hottest_day(city: str, interval: int) -> str:
     dump_forecasted_data(city, interval)
     db = db_handler()
     days = db.get_forecasted_data(city)[:interval:]
+    # The above DB method returns all the days after the current days. So by slicing the list
+    # I a stricting the list to the desired size.
     max_temp = db.get_temperature(days)
     # creating the required result.
     for i in days:
@@ -117,3 +119,20 @@ def get_hottest_day(city: str, interval: int) -> str:
                 }
             )
     return json.dump({"error": "Something went wrong :("})
+
+
+def second_most_humid_city() -> str:
+    """
+    Task 2
+    ------
+    This function that queries the database to find the forecasted 2nd most humid city for the next 7 days.
+    """
+    db = db_handler()
+    result = db.get_second_humid_city()
+    return json.dumps(
+        {
+            "city": result[1][1],
+            # 1, 1 will get the second highest from the list
+            "avg_humidity": float(result[1][0]),
+        }
+    )
