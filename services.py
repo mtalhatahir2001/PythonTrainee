@@ -7,6 +7,16 @@ from question_6 import Forecaster
 
 
 def dump_forecasted_data(city: str, interval: int = 0) -> None:
+    """
+    This function fetchs the forecast API and dumps it into database.
+    Only dumps into the db if record is not already present.\n
+    Required parameters
+    -------------------
+    city
+        Name of the city to fetch data for.
+    interval
+        Number of days to fetch data for.
+    """
     result = Forecaster().get_forecast_data(True, hour=4, city=city, days=interval)
     for i in result.get("forecastday"):
         location = Location(
@@ -35,6 +45,14 @@ def dump_forecasted_data(city: str, interval: int = 0) -> None:
 
 
 def dump_current_data(city: str) -> None:
+    """
+    This function fetchs the current API and dumps it into database.
+    Only dumps into the db if record is not already present.\n
+    Required parameters
+    -------------------
+    city
+        Name of the city to fetch data for.
+    """
     result = WeatherForecaster().get_current_weather(True, city=city)
     location = Location(
         name=result.get("city"),
@@ -83,7 +101,7 @@ def get_hottest_day(city: str, interval: int) -> str:
     """
     TASK 1
     ------
-    This function takes the city and range of days and calculates the hottest forecasted day.
+    This function takes the city and range of days and calculates the hottest forecasted day in that range.
     """
     dump_forecasted_data(city, interval)
     db = db_handler()
