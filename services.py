@@ -153,3 +153,17 @@ def second_most_humid_city() -> str:
             "avg_humidity": float(result[1][0]),
         }
     )
+
+
+def city_with_lowest_daily_temp(interval: int) -> str:
+    """
+    Task 3
+    ------
+    function that takes a range of days as input and outputs the city
+    with the lowest average daily difference between its highest and
+    lowest temperature In the next n days where n is the range of days.
+    If the required data is not in the database, make an api call to add that data
+    """
+    db = db_handler()
+    result = db.lowest_average_daily_temp_difference(interval)
+    return json.dumps({"city": result[1], "avg_daily_tep_diff": result[0]})

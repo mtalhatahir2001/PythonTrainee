@@ -1,5 +1,5 @@
 import logging
-from datetime import date
+from datetime import date, timedelta
 
 from models import Base, Condition, Day, Location, Temprature, Wind
 from sqlalchemy import and_, create_engine, desc, func
@@ -169,3 +169,33 @@ class db_handler:
                 .all()
             )
             return days
+
+    def lowest_average_daily_temp_difference(self, interval: int) -> tuple:
+        current_date = date.today()
+        nth_day_from_now = current_date + timedelta(days=interval)
+        """
+        Below query groups the data set based on city and accept only those records that are between
+        current date and the range provided. 
+        Out puts the tuple containing the city with the lowest average daily difference
+        between its highest and lowest temperature
+        """
+        with Session(self.__engine) as session:
+            result = (
+                session.query(
+                    func.avg(Temprature.maxtemp_f - Temprature.mintemp_f), Location.name
+                )
+                .select_from(Temprature)
+                .join(Day)
+                .join(Location)
+                .filter(
+                    and_(
+                        Day.day_date >= current_date,
+                        Day.day_date <= nth_day_from_now,
+                        Day.is_current == False,
+                    )
+                )
+                .group_by(Location.name)
+                .order_by(func.avg(Temprature.maxtemp_f - Temprature.mintemp_f))
+                .all()[0]
+            )
+            return result
