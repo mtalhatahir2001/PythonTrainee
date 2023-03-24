@@ -30,7 +30,12 @@ def dump_forecasted_data(city: str, interval: int = 0) -> None:
             gust_mph=i.get("gust_mph"),
             humidity=i.get("humidity"),
         )
-        temp = Temprature(temp_f=i.get("temp_f"), feelslike_f=i.get("feelslike_f"))
+        temp = Temprature(
+            temp_f=i.get("temp_f"),
+            feelslike_f=i.get("feelslike_f"),
+            maxtemp_f=i.get("maxtemp_f"),
+            mintemp_f=i.get("mintemp_f"),
+        )
         condition = Condition(
             daily_chance_of_rain=i.get("daily_chance_of_rain"),
             daily_chance_of_snow=i.get("daily_chance_of_snow"),
@@ -94,7 +99,18 @@ def get_highest_temp_values(city: str) -> str:
     dump_forecasted_data(city, 7)
     db = db_handler()
     days = db.get_forecasted_data(city)
-    pass
+    max_temp_diff = db.get_highest_temperature_difference(days)
+    for i in days:
+        if i.id == max_temp_diff.day_id:
+            return json.dumps(
+                {
+                    "day": i.day_date.strftime("%m/%d/%Y, %H:%M:%S"),
+                    "max_temp_f": max_temp_diff.maxtemp_f,
+                    "min_temp_f": max_temp_diff.mintemp_f,
+                    "difference": max_temp_diff.maxtemp_f - max_temp_diff.mintemp_f,
+                }
+            )
+    return json.dump({"error": "Something went wrong :("})
 
 
 def get_hottest_day(city: str, interval: int) -> str:
@@ -132,6 +148,7 @@ def second_most_humid_city() -> str:
     return json.dumps(
         {
             "city": result[1][1],
+            # result is sorted list having largest element at 0
             # 1, 1 will get the second highest from the list
             "avg_humidity": float(result[1][0]),
         }

@@ -34,11 +34,17 @@ class Forecaster(WeatherForecaster):
                 dayResult["daily_chance_of_snow"] = i.get("day").get(
                     "daily_chance_of_snow"
                 )
+                dayResult["maxtemp_f"] = i.get("day").get("maxtemp_f")
+                dayResult["mintemp_f"] = i.get("day").get("mintemp_f")
                 dayResult["condition"] = i.get("day").get("condition").get("text")
                 for j in i.get("hour")[0]:
                     if j in self._WeatherForecaster__result_params:
                         dayResult[j] = i.get("hour")[0].get(j)
-                air_quality_index = i.get("day").get("air_quality").get("us-epa-index")
+                air_quality_index = i.get("day").get("air_quality")
+                if air_quality_index != None:
+                    air_quality_index = air_quality_index.get("us-epa-index")
+                else:
+                    air_quality_index = -1
                 dayResult[
                     "air_quality"
                 ] = self._WeatherForecaster__air_quality_types.get(air_quality_index)

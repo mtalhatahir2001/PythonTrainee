@@ -92,14 +92,43 @@ class db_handler:
         with Session(self.__engine) as session:
             """
             The below query is same as
-            select * from temprature where id == (select max(id) from temprature where id in (list_of_ids))
+            select * from temprature where temp_f == (select max(temp_f) from temprature where id in (list_of_ids))
             """
             temp = (
                 session.query(Temprature)
                 .filter(
-                    Temprature.id
+                    Temprature.temp_f
                     == (
-                        session.query(func.max(Temprature.id))
+                        session.query(func.max(Temprature.temp_f))
+                        .filter(Temprature.day_id.in_(list_of_ids))
+                        .first()[
+                            0
+                        ]  # since sub query return a tuple so its 0th index has the highest value
+                    )
+                )
+                .first()
+            )
+        return temp
+
+    def get_highest_temperature_difference(self, days: list[Day]) -> Temprature:
+        """
+        This function takes a list of days and return the highest temp difference.
+        """
+        list_of_ids = list()
+        [list_of_ids.append(day.id) for day in days]
+        with Session(self.__engine) as session:
+            """
+            The below query is same as
+            select * from temprature where maxtemp_f - mintemp_f == (select max(maxtemp_f - mintemp_f) from temprature where id in (list_of_ids))
+            """
+            temp = (
+                session.query(Temprature)
+                .filter(
+                    Temprature.maxtemp_f - Temprature.mintemp_f
+                    == (
+                        session.query(
+                            func.max(Temprature.maxtemp_f - Temprature.mintemp_f)
+                        )
                         .filter(Temprature.day_id.in_(list_of_ids))
                         .first()[
                             0
@@ -123,6 +152,7 @@ class db_handler:
                 (Decimal('60.1666666666666667'), 'Islamabad')
             ]
             """
+            logging.info("Querying the DB for second humid city")
             days = (
                 session.query(func.avg(Wind.humidity), Location.name)
                 .select_from(Wind)

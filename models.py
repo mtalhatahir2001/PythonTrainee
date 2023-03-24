@@ -27,6 +27,8 @@ class Temprature(Base):
     day_id: Mapped[int] = mapped_column(ForeignKey("Day.id"))
     day: Mapped[Day] = relationship(back_populates="temprature_child")
     temp_f: Mapped[float] = mapped_column(Float())
+    maxtemp_f: Mapped[float] = mapped_column(Float(), nullable=True)
+    mintemp_f: Mapped[float] = mapped_column(Float(), nullable=True)
     feelslike_f: Mapped[float] = mapped_column(Float())
 
 
