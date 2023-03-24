@@ -110,7 +110,7 @@ def get_highest_temp_values(city: str) -> str:
                     "difference": max_temp_diff.maxtemp_f - max_temp_diff.mintemp_f,
                 }
             )
-    return json.dump({"error": "Something went wrong :("})
+    return json.dumps({"error": "Something went wrong :("})
 
 
 def get_hottest_day(city: str, interval: int) -> str:
@@ -134,7 +134,7 @@ def get_hottest_day(city: str, interval: int) -> str:
                     "temp_f": max_temp.temp_f,
                 }
             )
-    return json.dump({"error": "Something went wrong :("})
+    return json.dumps({"error": "Something went wrong :("})
 
 
 def second_most_humid_city() -> str:
@@ -150,7 +150,7 @@ def second_most_humid_city() -> str:
             "city": result[1][1],
             # result is sorted list having largest element at 0
             # 1, 1 will get the second highest from the list
-            "avg_humidity": float(result[1][0]),
+            "avg_humidity": round(float(result[1][0]), 2),
         }
     )
 
@@ -166,4 +166,4 @@ def city_with_lowest_daily_temp(interval: int) -> str:
     """
     db = db_handler()
     result = db.lowest_average_daily_temp_difference(interval)
-    return json.dumps({"city": result[1], "avg_daily_tep_diff": result[0]})
+    return json.dumps({"city": result[1], "avg_daily_tep_diff": round(result[0], 2)})
