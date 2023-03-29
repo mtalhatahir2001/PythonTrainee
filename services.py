@@ -46,7 +46,7 @@ def dump_forecasted_data(city: str, interval: int = 0) -> None:
             air_quality=i.get("air_quality"),
         )
         handle = db_handler()
-        handle.insertData(day, location, wind, temp, condition)
+        handle.insert_data(day, location, wind, temp, condition)
 
 
 def dump_current_data(city: str) -> None:
@@ -83,7 +83,7 @@ def dump_current_data(city: str) -> None:
         air_quality=result.get("air_quality"),
     )
     handle = db_handler()
-    handle.insertData(day, location, wind, temp, condition)
+    handle.insert_data(day, location, wind, temp, condition)
 
 
 def get_highest_temp_values(city: str) -> str:

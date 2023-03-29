@@ -15,7 +15,7 @@ class db_handler:
         )
         Base.metadata.create_all(self.__engine)
 
-    def insertData(
+    def insert_data(
         self,
         day: Day,
         location: Location,
