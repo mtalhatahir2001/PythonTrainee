@@ -1,6 +1,9 @@
+import logging
 from typing import Any
 
 import requests
+
+logging.basicConfig(level=logging.DEBUG, filename="logs.txt")
 
 
 class WeatherForecaster:
@@ -59,10 +62,14 @@ class WeatherForecaster:
         This module/function fetch the api also filter the result based on self.__result_params
         """
         try:
+            logging.info(f"fetching {url}")
             response = requests.get(url).json()
             result = dict()
             result["date_time"] = response.get("location").get("localtime")
             result["condition"] = response.get("current").get("condition").get("text")
+            result["city"] = response.get("location").get("name")
+            result["latitude"] = response.get("location").get("lat")
+            result["longitude"] = response.get("location").get("lon")
             for i in response.get("current"):
                 if i in self.__result_params:
                     result[i] = response.get("current").get(i)
@@ -72,7 +79,7 @@ class WeatherForecaster:
             result["air_quality"] = self.__air_quality_types.get(air_quality_index)
             return result
         except Exception as e:
-            print(e)
+            logging.exception("Exception")
             return dict()
 
     def get_current_weather(

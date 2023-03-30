@@ -1,7 +1,10 @@
+import logging
 from typing import Any
 
 import requests
 from question_5 import WeatherForecaster
+
+logging.basicConfig(level=logging.DEBUG, filename="logs.txt")
 
 
 class Forecaster(WeatherForecaster):
@@ -14,30 +17,41 @@ class Forecaster(WeatherForecaster):
         This module/function fetch the api also filter the result based on self.__result_params
         """
         try:
+            logging.info(f"fetching {url}")
             response = requests.get(url).json()
             result = dict()
             result["date_time"] = response.get("location").get("localtime")
+            result["city"] = response.get("location").get("name")
+            result["latitude"] = response.get("location").get("lat")
+            result["longitude"] = response.get("location").get("lon")
             result["forecastday"] = list()
             for i in response.get("forecast").get("forecastday"):
                 dayResult = dict()
+                dayResult["date"] = i.get("date")
                 dayResult["daily_chance_of_rain"] = i.get("day").get(
                     "daily_chance_of_rain"
                 )
                 dayResult["daily_chance_of_snow"] = i.get("day").get(
                     "daily_chance_of_snow"
                 )
+                dayResult["maxtemp_f"] = i.get("day").get("maxtemp_f")
+                dayResult["mintemp_f"] = i.get("day").get("mintemp_f")
                 dayResult["condition"] = i.get("day").get("condition").get("text")
                 for j in i.get("hour")[0]:
                     if j in self._WeatherForecaster__result_params:
                         dayResult[j] = i.get("hour")[0].get(j)
-                air_quality_index = i.get("day").get("air_quality").get("us-epa-index")
+                air_quality_index = i.get("day").get("air_quality")
+                if air_quality_index != None:
+                    air_quality_index = air_quality_index.get("us-epa-index")
+                else:
+                    air_quality_index = -1
                 dayResult[
                     "air_quality"
                 ] = self._WeatherForecaster__air_quality_types.get(air_quality_index)
                 result["forecastday"].append(dayResult)
             return result
         except Exception as e:
-            print(e)
+            logging.exception("Exception")
             return dict()
 
     def get_forecast_data(
@@ -69,7 +83,3 @@ class Forecaster(WeatherForecaster):
             self.__CURRENT_WEATHER_ROUTE, filtered_params
         )
         return self.__fetch(url)
-
-
-if __name__ == "__main__":
-    print(Forecaster().get_forecast_data(True, hour=4, city="lahore", days=3))
